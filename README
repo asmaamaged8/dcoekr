@@ -1,0 +1,9 @@
+Mongoose is an Object Data Modeling (ODM) library for MongoDB and Node.js. It provides a straightforward, schema-based solution to model and interact with data in a MongoDB database. Mongoose simplifies the task of writing queries and interacting with MongoDB by allowing you to work with objects (i.e., JavaScript objects) instead of working directly with the MongoDB query language.
+**npm install mongoose**
+Importing 
+const mongoose = require('mongoose');
+
+
+To install node-redis, simply:
+
+npm install redis

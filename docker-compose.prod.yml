@@ -1,0 +1,11 @@
+version: "3"
+services:
+  node-app:
+    build:
+      context: .
+      target: production       # This corresponds to the `development` stage in the Dockerfile
+      # args:
+      #   - NODE_ENV=production 
+    environment:
+      - NODE_ENV=production
+    command: ["npm", "start"]  # This command will overide CMD in docker file 
