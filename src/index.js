@@ -2,7 +2,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const redis = require('redis');
-
+const os = require('os');
 const DB_USER = 'root';
 const DB_PASSWORD = "asmaa";
 const DB_PORT = 27017;
@@ -33,6 +33,7 @@ redisClient.connect();
 // Define route for storing data in Redis
 app.get('/', (req, res) => {
   redisClient.set('products', 'products...');
+  console.log(`traffic from ${os.hostname}`);
   res.send('<h1> Hello 000 </h1>');
 });
 
