@@ -2,6 +2,7 @@ version: "3"
 services:
   node-app:
     container_name: express-nodejs
+    image: asmaamaged/nodjs_app
     build: .
     volumes:
       - ./src:/app/src:ro # When using bind mounts, you can specify the exact location on your host machine that should be linked to the container
