@@ -1,22 +1,24 @@
-version: "3"
+version: "3"  # You can use 3.8 or higher if needed for newer features
 services:
   node-app:
-    # container_name: express-nodejs
     image: asmaamaged/nodjs_app
     build: .
     volumes:
-      - ./src:/app/src:ro # When using bind mounts, you can specify the exact location on your host machine that should be linked to the container
-    # ports:
-    #   - "4000:4000"  #Port forwarding is not needed if Nginx is used
+      - ./src:/app/src:ro  # Corrected indentation
     env_file:
       - ./.env
+    deploy:
+      replicas: 3
+      update_config:
+        parallelism: 1
+        delay: 5s
+      restart_policy:
+        condition: on-failure 
+        delay: 5s
     depends_on:
       - mongo    # Node app depends on MongoDB to be available
       - redis    # Node app depends on Redis to be available
-    
-  
 
-  
   mongo:
     image: mongo
     restart: always
@@ -24,30 +26,26 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: asmaa
     volumes:
-      - mongo_db:/data/db
+      - mongo_db:/data/db  # MongoDB data storage
 
-
-# UI tool for mongo database 
   mongo-express:
     image: mongo-express
     restart: always
     ports:
-      - 8081:8081
+      - "8081:8081"
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: asmaa
       ME_CONFIG_MONGODB_URL: mongodb://root:asmaa@mongo:27017/
-      ME_CONFIG_BASICAUTH: true
+      ME_CONFIG_BASICAUTH: null
     depends_on:
       - mongo
 
   redis:
     image: redis
     depends_on:
-      - mongo 
+      - mongo
 
-
-# forwarding client requests to backend servers (such as application servers or databases)
   nginx:
     image: nginx:stable-alpine
     ports:
@@ -58,8 +56,17 @@ services:
       - NGINX_HOST=foobar.com
       - NGINX_PORT=80
     depends_on:
-      - node-app # use the container name as the hostname to access the app container
+      - node-app  # Nginx depends on Node app for backend requests
 
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - WATCHTOWER_POLL_INTERVAL=3600  # Check for updates every hour
+      - WATCHTOWER_CLEANUP=true   # Remove old images after updates
+      - WATCHTOWER_TRACE=trace
 
 volumes:
-  mongo_db:
+  mongo_db:  # Define the volume for MongoDB data persistence

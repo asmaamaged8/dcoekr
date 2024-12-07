@@ -4,6 +4,18 @@ Importing
 const mongoose = require('mongoose');
 
 
+
 To install node-redis, simply:
 
 npm install redis
+
+
+Watchtower is an application that will monitor your running Docker containers and watch for changes to the images that those containers were originally started from. If watchtower detects that an image has changed, it will automatically restart the container using the new image.
+
+
+docker-compose -f docker-compose.dev.yml -f docker-compose.yml  up -d --build --scale node-app=3
+
+
+swarm 
+docker swarm init 
+docker stack deploy -c docker-compose.yml -c docker-compose.prod.yml  express_app
